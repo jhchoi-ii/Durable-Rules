@@ -166,28 +166,3 @@ post('system', {'type': 'temp', 'value': 12, 'date': '2021-03-30 17:04:00'})
 post('system', {'type': 'temp', 'value': 21, 'date': '2021-03-30 17:05:00'})
 post('system', {'type': 'temp', 'value': 22, 'date': '2021-03-30 17:06:00'})
 post('system', {'type': 'temp', 'value': 23, 'date': '2021-03-30 17:07:00'})
-
-!pip install durable_rules
-from durable.lang import *
-
-with ruleset('flow'):
-    # state condition uses 's'
-    @when_all(s.status == 'start')
-    def start(c):
-        # state update on 's'
-        c.s.status = 'next' 
-        print('start')
-
-    @when_all(s.status == 'next')
-    def next(c):
-        c.s.status = 'last' 
-        print('next')
-
-    @when_all(s.status == 'last')
-    def last(c):
-        c.s.status = 'end' 
-        print('last')
-        # deletes state at the end
-        c.delete_state()
-
-update_state('flow', { 'status': 'start' })
